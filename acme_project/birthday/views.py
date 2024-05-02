@@ -1,5 +1,6 @@
 # birthday/views.py
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
 
 # Импортируем класс BirthdayForm, чтобы создать экземпляр формы.
 from .forms import BirthdayForm
@@ -38,13 +39,18 @@ def birthday(request, pk=None):
 
 def birthday_list(request):
     # Получаем все объекты модели Birthday из БД.
-    birthdays = Birthday.objects.all()
-    birthdays = Birthday.objects.values()
-    for item in birthdays:
-        item['birthday_countdown'] = calculate_birthday_countdown(
-            item['birthday'])
+    birthdays = Birthday.objects.order_by('id')
+    paginator = Paginator(birthdays, 2)
+    
+    # Получаем из запроса значение параметра page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # birthdays = Birthday.objects.values()
+    # for item in birthdays:
+    #     item['birthday_countdown'] = calculate_birthday_countdown(
+    #         item['birthday'])
     # Передаём их в контекст шаблона.
-    context = {'birthdays': birthdays}
+    context = {'page_obj': page_obj}
     return render(request, 'birthday/birthday_list.html', context)
 
 
