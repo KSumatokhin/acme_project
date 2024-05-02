@@ -15,7 +15,10 @@ def birthday(request, pk=None):
         instance = None
     # Передаём в форму либо данные из запроса, либо None.
     # В случае редактирования прикрепляем объект модели.
-    form = BirthdayForm(request.POST or None, instance=instance)
+    form = BirthdayForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=instance)
     # Создаём словарь контекста сразу после инициализации формы.
     context = {'form': form}
     # Если форма валидна...
@@ -36,6 +39,10 @@ def birthday(request, pk=None):
 def birthday_list(request):
     # Получаем все объекты модели Birthday из БД.
     birthdays = Birthday.objects.all()
+    birthdays = Birthday.objects.values()
+    for item in birthdays:
+        item['birthday_countdown'] = calculate_birthday_countdown(
+            item['birthday'])
     # Передаём их в контекст шаблона.
     context = {'birthdays': birthdays}
     return render(request, 'birthday/birthday_list.html', context)
@@ -56,3 +63,6 @@ def delete_birthday(request, pk):
         return redirect('birthday:list')
     # Если был получен GET-запрос — отображаем форму.
     return render(request, 'birthday/birthday.html', context)
+
+
+birthdays = Birthday.objects.values()
