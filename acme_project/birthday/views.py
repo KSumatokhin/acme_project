@@ -1,12 +1,23 @@
 # birthday/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.views.generic import ListView
+
 
 # Импортируем класс BirthdayForm, чтобы создать экземпляр формы.
 from .forms import BirthdayForm
 # Импортируем из utils.py функцию для подсчёта дней.
 from .utils import calculate_birthday_countdown
 from .models import Birthday
+
+
+class BirthdayListView(ListView):
+    # Указываем модель, с которой работает CBV...
+    model = Birthday
+    # ...сортировку, которая будет применена при выводе списка объектов:
+    ordering = 'id'
+    # ...и даже настройки пагинации:
+    paginate_by = 10 
 
 
 def birthday(request, pk=None):
@@ -70,5 +81,3 @@ def delete_birthday(request, pk):
     # Если был получен GET-запрос — отображаем форму.
     return render(request, 'birthday/birthday.html', context)
 
-
-birthdays = Birthday.objects.values()
