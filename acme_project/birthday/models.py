@@ -10,6 +10,8 @@ class Birthday(models.Model):
     )
     birthday = models.DateField('Дата рождения', validators=(real_age,))
     image = models.ImageField('Фото', upload_to='birthdays_images', blank=True)
+    birthday_countdown = models.PositiveSmallIntegerField(
+        'Осталось до ДР', blank=True, default=0)
 
     class Meta:
         constraints = (

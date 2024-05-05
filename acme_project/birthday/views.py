@@ -9,10 +9,17 @@ from .utils import calculate_birthday_countdown
 
 
 class BirthdayListView(ListView):
-    breakpoint()
+    # breakpoint()
     model = Birthday
     ordering = 'id'
     paginate_by = 4
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        for item in queryset:
+            item.birthday_countdown = calculate_birthday_countdown(item.birthday)
+            item.save()
+        return queryset
 
 
 class BirthdayCreateView(CreateView):
