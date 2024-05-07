@@ -95,3 +95,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
