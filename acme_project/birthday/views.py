@@ -13,13 +13,14 @@ class BirthdayListView(ListView):
     model = Birthday
     ordering = 'id'
     paginate_by = 4
-    
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        for item in queryset:
-            item.birthday_countdown = calculate_birthday_countdown(item.birthday)
-            item.save()
-        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        object_list = context['object_list']
+        for item in object_list:
+            item = item.__dict__
+            item['birthday_countdown'] = calculate_birthday_countdown(item['birthday'])
+        return context
 
 
 class BirthdayCreateView(CreateView):
