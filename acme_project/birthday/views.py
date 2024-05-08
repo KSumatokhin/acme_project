@@ -18,8 +18,10 @@ class BirthdayListView(ListView):
         context = super().get_context_data(**kwargs)
         object_list = context['object_list']
         for item in object_list:
-            item = item.__dict__
-            item['birthday_countdown'] = calculate_birthday_countdown(item['birthday'])
+            # item = item.__dict__
+            # item['birthday_countdown'] = calculate_birthday_countdown(
+            #     item['birthday'])
+            item.birthday_countdown = calculate_birthday_countdown(item.birthday)
         return context
 
 
